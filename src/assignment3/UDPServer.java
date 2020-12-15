@@ -3,10 +3,6 @@ package assignment3;
 import java.io.IOException;
 import java.net.*;
 
-/**
- *
- * @author Dora Di
- */
 public class UDPServer
 {
     private static final int serverPort = 7777;
@@ -49,13 +45,18 @@ public class UDPServer
         }
     }
 
-    public static String receiveRequest() throws IOException
+    public static String receiveRequest()
     {
-        requestPacket = new DatagramPacket(dataIn, dataIn.length);
-        serverSocket.receive(requestPacket);
-        String message = new String(requestPacket.getData(), 0, requestPacket.getLength());
-        System.out.println("Request: " + message);
-        return message;
+        try {
+            requestPacket = new DatagramPacket(dataIn, dataIn.length);
+            serverSocket.receive(requestPacket);
+            String message = new String(requestPacket.getData(), 0, requestPacket.getLength());
+            System.out.println("Request: " + message);
+            return message;
+        } catch(Exception e){
+            System.out.println(e.toString());
+            return "nope";
+        }
     }
 
     public static String processRequest(String message)

@@ -1,15 +1,15 @@
 package assignment3;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
 
-/**
- *
- * @author Dora Di
- */
 public class UDPClient
 {
     // Client needs to know server identification, <IP:port>
@@ -28,7 +28,7 @@ public class UDPClient
     public static void main(String[] args) throws IOException
     {
         clientSocket = new DatagramSocket();
-        InetAddress serverIP = InetAddress.getByName(args[0]);
+        InetAddress serverIP = InetAddress.getByName("192.168.0.47");
         System.out.println(serverIP);
 
         Scanner scan = new Scanner(System.in);
@@ -44,19 +44,23 @@ public class UDPClient
 
     public static void sendRequest(InetAddress serverIP) throws IOException
     {
+        BufferedImage img = ImageIO.read(new File("src/assignment3/bulgaria.jpg"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(img, "jpg", baos);
+        baos.flush();
+        byte[] buffer = baos.toByteArray();
         //clientSocket = new DatagramSocket();
         dataOut = message.getBytes();
-        requestPacket = new DatagramPacket(dataOut, dataOut.length, serverIP, serverPort);
+        requestPacket = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
         clientSocket.send(requestPacket);
     }
 
     public static void receiveResponse() throws IOException
     {
-        //clientSocket = new DatagramSocket();
         responsePacket = new DatagramPacket(dataIn, dataIn.length);
         clientSocket.receive(responsePacket);
         String message = new String(responsePacket.getData(), 0, responsePacket.getLength());
-        System.out.println("Response from Server: " + message);
+        System.out.println("Response from Server: " + message.getBytes());
     }
 }
 
