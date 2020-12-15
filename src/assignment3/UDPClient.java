@@ -2,13 +2,15 @@ package assignment3;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
+import java.io.ByteArrayOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 public class UDPClient
 {
@@ -42,6 +44,13 @@ public class UDPClient
         clientSocket.close();
     }
 
+    public static void byteArrayToImage(byte[] data) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(data);
+        BufferedImage bImage2 = ImageIO.read(bis);
+        ImageIO.write(bImage2, "jpg", new File("src/assignment3/output/output_" + Math.round(Math.random() * 1000000) + ".jpg") );
+        System.out.println("image created");
+    }
+
     public static void sendRequest(InetAddress serverIP) throws IOException
     {
         BufferedImage img = ImageIO.read(new File("src/assignment3/bulgaria.jpg"));
@@ -49,10 +58,7 @@ public class UDPClient
         ImageIO.write(img, "jpg", baos);
         baos.flush();
         byte[] buffer = baos.toByteArray();
-        //clientSocket = new DatagramSocket();
-        dataOut = message.getBytes();
-        requestPacket = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
-        clientSocket.send(requestPacket);
+        byteArrayToImage(buffer);
     }
 
     public static void receiveResponse() throws IOException
