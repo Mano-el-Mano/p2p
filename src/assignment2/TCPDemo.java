@@ -28,8 +28,8 @@ public class TCPDemo
         InetAddress ip = null;
         Socket socket = null;
 
-        if (args.length == 2)
-            socket = new Socket(args[0], parseInt(args[1]));
+        if (true)
+            socket = new Socket("127.0.1.1", PORT);
         else
         {
             System.err.println("Server data missing");

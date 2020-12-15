@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  *
@@ -79,22 +80,20 @@ public class TCPS
 
     public static void main(String[] args) throws IOException
     {
-        try
-        {
-            openSocket = configureServer();
-            connectClient(openSocket);
-        }
-        catch(Exception e)
-        {
-            System.out.println(" Connection fails: " + e);
-        }
-        finally
-        {
-            openSocket.close();
-            System.out.println("Connection to client closed");
+        while(true) {
 
-            serverSocket.close();
-            System.out.println("Server port closed");
+            try {
+                openSocket = configureServer();
+                connectClient(openSocket);
+            } catch (Exception e) {
+                System.out.println(" Connection fails: " + e);
+            } finally {
+                openSocket.close();
+                System.out.println("Connection to client closed");
+
+                serverSocket.close();
+                System.out.println("Server port closed");
+            }
         }
 
     }
