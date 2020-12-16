@@ -7,23 +7,17 @@ public class UDPServer
 {
     private static final int serverPort = 7777;
 
-    // buffers for the messages
     private static byte[] dataIn = new byte[128];
     private static byte[] dataOut = new byte[128];
-
-    // In UDP messages are encapsulated in packages and sent over sockets
     private static DatagramPacket requestPacket;
     private static DatagramPacket responsePacket;
     private static DatagramSocket serverSocket;
 
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) {
         String messageIn, messageOut;
-        try
-        {
+        try {
             String serverIP = InetAddress.getLocalHost().getHostAddress();
-            // Opens socket for accepting requests
             serverSocket = new DatagramSocket(serverPort);
             while(true)
             {
@@ -34,19 +28,16 @@ public class UDPServer
                 sendResponse(messageOut);
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             System.out.println(" Connection fails: " + e);
         }
-        finally
-        {
+        finally {
             serverSocket.close();
             System.out.println("Server port closed");
         }
     }
 
-    public static String receiveRequest()
-    {
+    public static String receiveRequest() {
         try {
             requestPacket = new DatagramPacket(dataIn, dataIn.length);
             serverSocket.receive(requestPacket);
@@ -59,13 +50,11 @@ public class UDPServer
         }
     }
 
-    public static String processRequest(String message)
-    {
+    public static String processRequest(String message) {
         return message.toUpperCase();
     }
 
-    public static void sendResponse(String message) throws IOException
-    {
+    public static void sendResponse(String message) throws IOException {
         InetAddress clientIP;
         int clientPort;
 
