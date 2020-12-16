@@ -19,10 +19,6 @@ public class UDPClient {
     private static DatagramPacket responsePacket;
     private static DatagramSocket clientSocket;
 
-    private static byte[] requestData;
-    private static byte[] responseData;
-
-
     public static void main(String[] args) throws IOException {
         clientSocket = new DatagramSocket();
         InetAddress serverIP = InetAddress.getByName("192.168.0.47");
@@ -43,7 +39,9 @@ public class UDPClient {
         if(bufferedImage == null){
             System.out.println("something went wrong with reading the image!");
         } else {
-            ImageIO.write(bufferedImage, "png", new File("src/assignment3/output/output_" + Math.round(Math.random() * 1000000) + ".png"));
+            String path = "src/assignment3/output/output_" + Math.round(Math.random() * 1000000) + ".png";
+            ImageIO.write(bufferedImage, "png", new File(path));
+            System.out.println("saved image at: " + path + "!");
         }
     }
 
@@ -53,7 +51,6 @@ public class UDPClient {
         ImageIO.write(img, "png", baos);
         baos.flush();
         byte[] buffer = baos.toByteArray();
-        requestData = buffer;
         requestPacket = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
         clientSocket.send(requestPacket);
     }
@@ -61,11 +58,7 @@ public class UDPClient {
     public static void receiveResponse() throws IOException {
         responsePacket = new DatagramPacket(dataIn, dataIn.length);
         clientSocket.receive(responsePacket);
-        responseData = responsePacket.getData();
-        System.out.println(requestData == responseData); //Assuming this is where something goes wrong?
-        System.out.println("requestData" + requestData.length);
-        System.out.println("responseData" + responseData.length);
-        byteArrayToImage(responseData);
+        byteArrayToImage(responsePacket.getData());
     }
 }
 
